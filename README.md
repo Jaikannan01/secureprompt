@@ -27,7 +27,8 @@ npm install secureprompt
 ```typescript
 import { sanitizePrompt } from 'secureprompt';
 
-const result = sanitizePrompt('My credit card is 4532-1234-5678-9010');
+// Uses Luhn-valid test number so detection triggers
+const result = sanitizePrompt('My credit card is 4111-1111-1111-1111');
 
 if (!result.isValid) {
   console.log('Blocked:', result.violations);
