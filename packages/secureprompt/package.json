@@ -1,0 +1,44 @@
+{
+  "name": "secureprompt",
+  "version": "1.0.0",
+  "description": "A library for sanitizing LLM prompt inputs to prevent sensitive data leaks and injection attacks",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "generate:corpus": "tsx scripts/generateCorpus.ts",
+    "prebuild": "npm run generate:corpus",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "llm",
+    "sanitization",
+    "security",
+    "prompt-injection",
+    "pii-detection",
+    "credit-card",
+    "ssn",
+    "data-protection"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "secureprompt-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo for SecurePrompt library",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces"
+  },
+  "keywords": [
+    "llm",
+    "sanitization",
+    "security",
+    "prompt-injection",
+    "pii-detection"
+  ],
+  "author": "",
+  "license": "Apache-2.0"
+}
