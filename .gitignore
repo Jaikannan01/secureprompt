@@ -53,3 +53,7 @@ lerna-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+
+# Generated corpus files (auto-created during build)
+packages/secureprompt/src/detectors/corpus/generated.ts
+packages/secureprompt/src/detectors/corpus/generated.json
