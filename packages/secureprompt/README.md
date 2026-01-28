@@ -84,6 +84,41 @@ const result = sanitizePrompt(
 
 - **redactionPlaceholder**: Text to use when redacting (default: `'[REDACTED]'`)
 
+- **disabledDetectors**: Array of detector names to disable
+  - Built-in detector names: `sensitive-data`, `injection-phrases`, `injection-patterns`
+
+- **customDetectors**: Array of custom detectors to run in addition to built-ins
+
+### Custom Detectors
+
+```typescript
+import { sanitizePrompt } from 'secureprompt.dev';
+import type { Detector, DetectionResult } from 'secureprompt.dev';
+
+const profanityDetector: Detector = {
+  name: 'profanity',
+  enabled: true,
+  detect(text: string): DetectionResult[] {
+    const match = text.match(/\bfoo\b/i);
+    if (!match) return [];
+    const start = match.index ?? 0;
+    return [{
+      type: 'profanity',
+      severity: 'low',
+      matched: match[0],
+      startIndex: start,
+      endIndex: start + match[0].length,
+      context: 'Example custom detector',
+    }];
+  },
+};
+
+const result = sanitizePrompt('hello foo', {
+  customDetectors: [profanityDetector],
+  disabledDetectors: ['injection-phrases'],
+});
+```
+
 ## What Gets Detected
 
 ### Sensitive Data
