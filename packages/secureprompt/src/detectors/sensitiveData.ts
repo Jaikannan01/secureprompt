@@ -133,12 +133,14 @@ class SensitiveDataDetector implements Detector {
     for (const { pattern, type, severity } of API_KEY_PATTERNS) {
       let match: RegExpExecArray | null;
       while ((match = pattern.exec(text)) !== null) {
-        // Skip if it matches exclusion patterns (hashes, UUIDs, etc.)
-        const isExcluded = API_KEY_EXCLUSION_PATTERNS.some(exclusionPattern =>
-          exclusionPattern.test(match![0])
-        );
-        if (isExcluded) {
-          continue;
+        // Skip if it matches exclusion patterns (hashes, UUIDs, etc.) for generic keys only
+        if (type === 'api-key') {
+          const isExcluded = API_KEY_EXCLUSION_PATTERNS.some(exclusionPattern =>
+            exclusionPattern.test(match![0])
+          );
+          if (isExcluded) {
+            continue;
+          }
         }
         results.push({
           type,
@@ -174,4 +176,3 @@ class SensitiveDataDetector implements Detector {
 }
 
 export const sensitiveDataDetector = new SensitiveDataDetector();
-

@@ -8,7 +8,7 @@
 
 ## Features
 
-- 🔒 **Sensitive Data Detection**: Automatically detects credit cards (with Luhn validation), Social Security Numbers, email addresses, phone numbers, API keys, and IP addresses
+- 🔒 **Sensitive Data Detection**: Automatically detects credit cards (with Luhn validation), Social Security Numbers, email addresses, phone numbers, API keys (provider-specific), SHA-256 hashes, and IP addresses
 - 🛡️ **Injection Attack Prevention**: Blocks prompt injection attempts, jailbreak attempts, system prompt extraction, and obfuscated injection patterns
 - ⚙️ **Configurable Sanitization**: Choose between strict, moderate, or permissive modes. Block, redact, or warn on violations
 - 📘 **TypeScript First**: Fully typed with TypeScript for excellent developer experience

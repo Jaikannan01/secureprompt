@@ -1,6 +1,6 @@
 # secureprompt.dev
 
-A TypeScript library for sanitizing LLM prompt input/output to prevent sensitive data leaks and injection attacks.
+A TypeScript library for sanitizing LLM prompt input/output to prevent sensitive data leaks and injection attacks, including provider-specific API keys and hashes.
 
 ## Installation
 
