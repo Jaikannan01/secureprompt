@@ -4,9 +4,8 @@
 name: Publish secureprompt.dev
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
 
 permissions:
   contents: read
