@@ -101,12 +101,30 @@
           violationsEl.innerHTML = '';
           for (const v of res.violations) {
             const li = document.createElement('li');
-            li.innerHTML = `
-              <div><span class="badge">${v.severity}</span> <strong>${v.type}</strong> — ${v.message}</div>
-              <div class="muted">range: [${v.startIndex}, ${v.endIndex})</div>
-              <div class="muted">match: <code>${(v.matched || '').replace(/[<>]/g, m => ({'<':'&lt;','>':'&gt;'}[m]))}</code></div>
-            `;
-            violationsEl.appendChild(li);
+            const header = document.createElement('div');
+            const badge = document.createElement('span');
+            const type = document.createElement('strong');
+            const message = document.createElement('span');
+            const range = document.createElement('div');
+            const match = document.createElement('div');
+            const matchCode = document.createElement('code');
+
+            badge.className = 'badge';
+            badge.textContent = v.severity;
+            type.textContent = v.type;
+            const messageText = v.context || v.message || '';
+            message.textContent = messageText ? ` — ${messageText}` : '';
+            header.append(badge, ' ', type, message);
+
+            range.className = 'muted';
+            range.textContent = `range: [${v.startIndex}, ${v.endIndex})`;
+
+            match.className = 'muted';
+            matchCode.textContent = v.matched || '';
+            match.append('match: ', matchCode);
+
+            li.append(header, range, match);
+            violationsEl.append(li);
           }
         } else {
           violationsWrap.style.display = 'none';
@@ -135,4 +153,3 @@
     </script>
   </body>
   </html>
-

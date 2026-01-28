@@ -66,7 +66,6 @@ import { sanitizePrompt } from 'secureprompt.dev';
 const result = sanitizePrompt(
   'User input here',
   {
-    mode: 'strict',        // 'strict' | 'moderate' | 'permissive'
     action: 'redact',      // 'block' | 'redact' | 'warn'
     detailedResults: true, // Get detailed violation information
     redactionPlaceholder: '[REDACTED]'
@@ -75,11 +74,6 @@ const result = sanitizePrompt(
 ```
 
 ### Configuration Options
-
-- **mode**: Sanitization mode
-  - `strict`: Maximum security, blocks more patterns
-  - `moderate`: Balanced security (default)
-  - `permissive`: Minimal blocking, only critical issues
 
 - **action**: What to do when violations are detected
   - `block`: Block the input entirely (default)

@@ -45,6 +45,7 @@ class SensitiveDataDetector implements Detector {
   private detectCreditCards(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match;
+    CREDIT_CARD_PATTERN.lastIndex = 0;
 
     while ((match = CREDIT_CARD_PATTERN.exec(text)) !== null) {
       const cardNumber = match[0].replace(/[ -]/g, '');
@@ -67,6 +68,7 @@ class SensitiveDataDetector implements Detector {
   private detectSSNs(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match;
+    SSN_PATTERN.lastIndex = 0;
 
     while ((match = SSN_PATTERN.exec(text)) !== null) {
       // Basic validation: first 3 digits shouldn't be 000, 666, or 900-999
@@ -94,6 +96,7 @@ class SensitiveDataDetector implements Detector {
   private detectEmails(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match;
+    EMAIL_PATTERN.lastIndex = 0;
 
     while ((match = EMAIL_PATTERN.exec(text)) !== null) {
       results.push({
@@ -112,6 +115,7 @@ class SensitiveDataDetector implements Detector {
   private detectPhoneNumbers(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match;
+    PHONE_PATTERN.lastIndex = 0;
 
     while ((match = PHONE_PATTERN.exec(text)) !== null) {
       results.push({
@@ -131,6 +135,7 @@ class SensitiveDataDetector implements Detector {
     const results: DetectionResult[] = [];
 
     for (const { pattern, type, severity } of API_KEY_PATTERNS) {
+      pattern.lastIndex = 0;
       let match: RegExpExecArray | null;
       while ((match = pattern.exec(text)) !== null) {
         // Skip if it matches exclusion patterns (hashes, UUIDs, etc.) for generic keys only
@@ -159,6 +164,7 @@ class SensitiveDataDetector implements Detector {
   private detectIPAddresses(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match;
+    IPV4_PATTERN.lastIndex = 0;
 
     while ((match = IPV4_PATTERN.exec(text)) !== null) {
       results.push({

@@ -39,7 +39,6 @@ export function sanitizePrompt(
     if (finalConfig.disabledDetectors?.includes(detector.name)) {
       return false;
     }
-    // Apply mode-based filtering
     return detector.enabled;
   });
 
@@ -49,6 +48,9 @@ export function sanitizePrompt(
     const results = detector.detect(input);
     allViolations.push(...results);
   }
+
+  // Merge overlapping violations into union ranges for redaction only
+  const mergedViolations = mergeOverlappingViolations(allViolations);
 
   // Sort violations by severity (critical first)
   const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
@@ -66,9 +68,9 @@ export function sanitizePrompt(
   if (shouldBlock) {
     sanitized = '';
     isValid = false;
-  } else if (finalConfig.action === 'redact' && allViolations.length > 0) {
+  } else if (finalConfig.action === 'redact' && mergedViolations.length > 0) {
     // Redact violations (in reverse order to preserve indices)
-    const violationsToRedact = [...allViolations].sort((a, b) => b.startIndex - a.startIndex);
+    const violationsToRedact = [...mergedViolations].sort((a, b) => b.startIndex - a.startIndex);
     for (const violation of violationsToRedact) {
       sanitized =
         sanitized.slice(0, violation.startIndex) +
@@ -85,3 +87,29 @@ export function sanitizePrompt(
   };
 }
 
+function mergeOverlappingViolations(results: DetectionResult[]): DetectionResult[] {
+  if (results.length <= 1) return results;
+  const sorted = results.slice().sort((a, b) => a.startIndex - b.startIndex);
+  const merged: DetectionResult[] = [];
+
+  for (const current of sorted) {
+    const last = merged[merged.length - 1];
+    if (!last) {
+      merged.push({ ...current });
+      continue;
+    }
+
+    if (current.startIndex <= last.endIndex) {
+      // Union overlapping ranges; keep severity/type from the first seen range.
+      last.endIndex = Math.max(last.endIndex, current.endIndex);
+      if (last.matched.length < last.endIndex - last.startIndex) {
+        last.matched = '';
+        last.context = undefined;
+      }
+    } else {
+      merged.push({ ...current });
+    }
+  }
+
+  return merged;
+}

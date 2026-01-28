@@ -61,6 +61,7 @@ class InjectionPatternDetector implements Detector {
   private detectBase64Encoded(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match;
+    BASE64_PATTERN.lastIndex = 0;
 
     while ((match = BASE64_PATTERN.exec(text)) !== null) {
       // Try to decode and check if it contains suspicious content
@@ -98,6 +99,7 @@ class InjectionPatternDetector implements Detector {
   private detectURLEncoded(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match: RegExpExecArray | null;
+    URL_ENCODED_PATTERN.lastIndex = 0;
 
     while ((match = URL_ENCODED_PATTERN.exec(text)) !== null) {
       const decoded = decodeURL(match[0]);
@@ -125,6 +127,7 @@ class InjectionPatternDetector implements Detector {
   private detectHexEncoded(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match: RegExpExecArray | null;
+    HEX_ENCODED_PATTERN.lastIndex = 0;
 
     while ((match = HEX_ENCODED_PATTERN.exec(text)) !== null) {
       // Skip if it looks like a regular hex number (too short or common patterns)
@@ -157,6 +160,7 @@ class InjectionPatternDetector implements Detector {
   private detectROT13Encoded(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match: RegExpExecArray | null;
+    ROT13_PATTERN.lastIndex = 0;
 
     while ((match = ROT13_PATTERN.exec(text)) !== null) {
       // Only check if it looks like it could be ROT13
@@ -189,6 +193,7 @@ class InjectionPatternDetector implements Detector {
   private detectUnicodeEscapes(text: string): DetectionResult[] {
     const results: DetectionResult[] = [];
     let match: RegExpExecArray | null;
+    UNICODE_ESCAPE_PATTERN.lastIndex = 0;
 
     while ((match = UNICODE_ESCAPE_PATTERN.exec(text)) !== null) {
       const decoded = decodeUnicodeEscapes(match[0]);
@@ -236,6 +241,7 @@ class InjectionPatternDetector implements Detector {
     let match: RegExpExecArray | null;
     let matchCount = 0;
     const markPositions: number[] = [];
+    COMBINING_MARKS_REGEX.lastIndex = 0;
 
     while ((match = COMBINING_MARKS_REGEX.exec(text)) !== null) {
       matchCount++;
@@ -288,6 +294,7 @@ class InjectionPatternDetector implements Detector {
     const results: DetectionResult[] = [];
     let match;
     let matchCount = 0;
+    SUSPICIOUS_UNICODE_PATTERN.lastIndex = 0;
 
     while ((match = SUSPICIOUS_UNICODE_PATTERN.exec(text)) !== null) {
       matchCount++;
@@ -310,4 +317,3 @@ class InjectionPatternDetector implements Detector {
 }
 
 export const injectionPatternDetector = new InjectionPatternDetector();
-

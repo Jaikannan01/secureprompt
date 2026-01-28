@@ -8,10 +8,9 @@
 export { sanitizePrompt } from './sanitizer';
 export type { SanitizationResult } from './sanitizer';
 
-export type { SanitizerConfig, SanitizationMode, ViolationAction } from './config';
+export type { SanitizerConfig, ViolationAction } from './config';
 
 export type { Detector, DetectionResult } from './detectors/baseDetector';
 
 // Re-export for convenience
 export { DEFAULT_CONFIG } from './config';
-

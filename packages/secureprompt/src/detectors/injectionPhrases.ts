@@ -72,7 +72,7 @@ class InjectionPhrasesDetector implements Detector {
       }
     }
 
-    return results;
+    return this.filterOverlapsPreferLongest(results);
   }
 
   private detectJailbreakAttempts(text: string): DetectionResult[] {
@@ -186,6 +186,33 @@ class InjectionPhrasesDetector implements Detector {
       return safe;
     });
     return escaped.join('|');
+  }
+
+  /**
+   * Prefer the longest match when multiple detections overlap.
+   */
+  private filterOverlapsPreferLongest(results: DetectionResult[]): DetectionResult[] {
+    if (results.length <= 1) return results;
+    const sorted = results.slice().sort((a, b) => {
+      const lenA = a.endIndex - a.startIndex;
+      const lenB = b.endIndex - b.startIndex;
+      if (lenA !== lenB) return lenB - lenA; // longer first
+      return a.startIndex - b.startIndex;
+    });
+
+    const kept: DetectionResult[] = [];
+    for (const candidate of sorted) {
+      const overlaps = kept.some((k) =>
+        candidate.startIndex < k.endIndex && candidate.endIndex > k.startIndex
+      );
+      if (!overlaps) {
+        kept.push(candidate);
+      }
+    }
+
+    // Preserve stable order by start index for downstream processing
+    kept.sort((a, b) => a.startIndex - b.startIndex);
+    return kept;
   }
 }
 
