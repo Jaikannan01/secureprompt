@@ -38,7 +38,7 @@ Feature suggestions are welcome! Please open an issue with:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/secureprompt.git
+   git clone https://github.com/Jaikannan01/secureprompt.git
    cd secureprompt
    ```
 
@@ -77,4 +77,3 @@ Feature suggestions are welcome! Please open an issue with:
 Feel free to open an issue for any questions or concerns. We're here to help!
 
 Thank you for contributing to SecurePrompt! 🎉
-

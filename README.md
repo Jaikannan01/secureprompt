@@ -1,10 +1,10 @@
 # SecurePrompt
 
-[![npm version](https://img.shields.io/npm/v/secureprompt.svg)](https://www.npmjs.com/package/secureprompt)
+[![npm version](https://img.shields.io/npm/v/secureprompt.dev.svg)](https://www.npmjs.com/package/secureprompt.dev)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 
-**SecurePrompt** is an open source TypeScript library for sanitizing LLM prompt inputs to prevent sensitive data leaks and injection attacks.
+**SecurePrompt** is an open source TypeScript library for sanitizing LLM prompt input/output to prevent sensitive data leaks and injection attacks.
 
 ## Features
 
@@ -19,13 +19,13 @@
 ## Installation
 
 ```bash
-npm install secureprompt
+npm install secureprompt.dev
 ```
 
 ## Quick Start
 
 ```typescript
-import { sanitizePrompt } from 'secureprompt';
+import { sanitizePrompt } from 'secureprompt.dev';
 
 // Uses Luhn-valid test number so detection triggers
 const result = sanitizePrompt('My credit card is 4111-1111-1111-1111');
@@ -42,9 +42,9 @@ if (!result.isValid) {
 ### Basic Usage
 
 ```typescript
-import { sanitizePrompt } from 'secureprompt';
+import { sanitizePrompt } from 'secureprompt.dev';
 
-const result = sanitizePrompt('User input here');
+const result = sanitizePrompt('User input/output here');
 
 if (result.blocked) {
   // Input was blocked due to violations
@@ -61,7 +61,7 @@ if (result.blocked) {
 ### With Configuration
 
 ```typescript
-import { sanitizePrompt } from 'secureprompt';
+import { sanitizePrompt } from 'secureprompt.dev';
 
 const result = sanitizePrompt(
   'User input here',
@@ -113,10 +113,10 @@ const result = sanitizePrompt(
 
 ### `sanitizePrompt(input: string, config?: SanitizerConfig): SanitizationResult`
 
-Sanitizes a prompt input string.
+Sanitizes a prompt input or output string.
 
 **Parameters:**
-- `input`: The prompt string to sanitize
+- `input`: The prompt input/output string to sanitize
 - `config`: Optional configuration object
 
 **Returns:**
@@ -174,22 +174,22 @@ result.violations.forEach(violation => {
 Pick an option that fits your environment.
 
 - One-liner (bash, git clone):
-  - `curl -fsSL https://raw.githubusercontent.com/<org>/secureprompt/main/scripts/install.sh | bash`
-  - Env options: `METHOD=tar`, `BRANCH=main`, `DIR=secureprompt`, `REPO_URL=https://github.com/<org>/secureprompt.git`
+  - `curl -fsSL https://raw.githubusercontent.com/Jaikannan01/secureprompt/main/scripts/install.sh | bash`
+  - Env options: `METHOD=tar`, `BRANCH=main`, `DIR=secureprompt`, `REPO_URL=https://github.com/Jaikannan01/secureprompt.git`
 
 - One-liner (PowerShell):
-  - `iwr -useb https://raw.githubusercontent.com/<org>/secureprompt/main/scripts/install.ps1 | iex`
+  - `iwr -useb https://raw.githubusercontent.com/Jaikannan01/secureprompt/main/scripts/install.ps1 | iex`
 
 - Git clone:
-  - `git clone --depth=1 https://github.com/<org>/secureprompt.git && cd secureprompt && npm install && npm run build`
+  - `git clone --depth=1 https://github.com/Jaikannan01/secureprompt.git && cd secureprompt && npm install && npm run build`
 
 - Tarball (GitHub):
-  - `curl -L https://github.com/<org>/secureprompt/archive/refs/heads/main.tar.gz | tar xz && mv secureprompt-main secureprompt && cd secureprompt && npm install && npm run build`
+  - `curl -L https://github.com/Jaikannan01/secureprompt/archive/refs/heads/main.tar.gz | tar xz && mv secureprompt-main secureprompt && cd secureprompt && npm install && npm run build`
 
 - Library only (npm/pnpm/yarn):
-  - `npm install secureprompt`
-  - `pnpm add secureprompt`
-  - `yarn add secureprompt`
+  - `npm install secureprompt.dev`
+  - `pnpm add secureprompt.dev`
+  - `yarn add secureprompt.dev`
 
 After install:
 
@@ -205,6 +205,6 @@ Apache-2.0 - see [LICENSE](LICENSE) for details.
 
 ## Links
 
-- [npm Package](https://www.npmjs.com/package/secureprompt)
-- [GitHub Repository](https://github.com)
-- [Documentation](https://github.com)
+- [npm Package](https://www.npmjs.com/package/secureprompt.dev)
+- [GitHub Repository](https://github.com/Jaikannan01/secureprompt)
+- [Documentation](https://github.com/Jaikannan01/secureprompt)

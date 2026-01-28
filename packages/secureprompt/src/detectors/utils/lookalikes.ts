@@ -112,21 +112,19 @@ export function findLookalikeKeywords(text: string): Array<{ keyword: string; ma
       // Check if the original substring contains lookalike characters
       // by comparing normalized version
       const normalizedSubstring = normalizeLookalikes(originalSubstring);
-      if (normalizedSubstring.includes(keyword)) {
+      // Only flag if normalization actually changed characters (i.e., real lookalikes present)
+      if (normalizedSubstring.includes(keyword) && normalizedSubstring !== originalSubstring) {
         // Find the actual position of the keyword in the original substring
         const keywordPosInSubstring = normalizedSubstring.indexOf(keyword);
         const actualStart = windowStart + keywordPosInSubstring;
         const actualEnd = actualStart + keyword.length;
-        
-        // Get a bit more context for the matched string
-        const contextStart = Math.max(0, actualStart - 2);
-        const contextEnd = Math.min(lowerText.length, actualEnd + 2);
-        
+
+        // Return the exact keyword match span (without extra context)
         results.push({
           keyword,
-          matched: text.substring(contextStart, contextEnd),
-          startIndex: contextStart,
-          endIndex: contextEnd,
+          matched: text.substring(actualStart, actualEnd),
+          startIndex: actualStart,
+          endIndex: actualEnd,
         });
       }
       
@@ -136,4 +134,3 @@ export function findLookalikeKeywords(text: string): Array<{ keyword: string; ma
   
   return results;
 }
-

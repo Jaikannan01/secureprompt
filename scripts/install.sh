@@ -4,10 +4,10 @@ set -euo pipefail
 # SecurePrompt installer
 # Usage examples:
 #   curl -fsSL https://your.domain/install.sh | bash
-#   curl -fsSL https://raw.githubusercontent.com/<org>/secureprompt/main/scripts/install.sh | bash
-#   METHOD=tar REPO_URL=https://github.com/<org>/secureprompt.git bash -c "$(curl -fsSL https://your.domain/install.sh)"
+#   curl -fsSL https://raw.githubusercontent.com/Jaikannan01/secureprompt/main/scripts/install.sh | bash
+#   METHOD=tar REPO_URL=https://github.com/Jaikannan01/secureprompt.git bash -c "$(curl -fsSL https://your.domain/install.sh)"
 
-REPO_URL=${REPO_URL:-https://github.com/yourusername/secureprompt.git}
+REPO_URL=${REPO_URL:-https://github.com/Jaikannan01/secureprompt.git}
 REPO_NAME=${REPO_URL##*/}
 DIR=${DIR:-${REPO_NAME%.git}}
 BRANCH=${BRANCH:-main}
@@ -82,4 +82,3 @@ To use the library in your project:
   npm install secureprompt
   # or: pnpm add secureprompt | yarn add secureprompt
 EOF
-

@@ -4,7 +4,9 @@ import {
   JAILBREAK_PATTERNS,
   SYSTEM_PROMPT_EXTRACTION_PHRASES,
   TRAINING_DATA_EXTRACTION_PHRASES,
+  SYNONYMS,
 } from './corpus/injectionPhrases';
+import { GENERATED_PHRASES } from './corpus/generated';
 
 /**
  * Detector for phrase-based injection attempts
@@ -29,6 +31,9 @@ class InjectionPhrasesDetector implements Detector {
     // Training data extraction attempts
     results.push(...this.detectTrainingDataExtraction(text));
 
+    // Ordered synonym sequence detection (e.g., ignore ... previous ... instructions)
+    results.push(...this.detectOrderedSynonymSequences(text));
+
     return results;
   }
 
@@ -36,6 +41,7 @@ class InjectionPhrasesDetector implements Detector {
     const results: DetectionResult[] = [];
     const lowerText = text.toLowerCase();
 
+    // Static curated phrases
     for (const { phrase, severity } of PROMPT_INJECTION_PHRASES) {
       const index = lowerText.indexOf(phrase);
       if (index !== -1) {
@@ -46,6 +52,22 @@ class InjectionPhrasesDetector implements Detector {
           startIndex: index,
           endIndex: index + phrase.length,
           context: `Prompt injection phrase detected: "${phrase}"`,
+        });
+      }
+    }
+
+    // Auto-generated permutations corpus (treated as high severity)
+    for (const rawPhrase of GENERATED_PHRASES) {
+      const phrase = rawPhrase.toLowerCase();
+      const index = lowerText.indexOf(phrase);
+      if (index !== -1) {
+        results.push({
+          type: 'prompt-injection',
+          severity: 'high',
+          matched: text.substring(index, index + phrase.length),
+          startIndex: index,
+          endIndex: index + phrase.length,
+          context: 'Matched generated injection phrase permutation',
         });
       }
     }
@@ -115,7 +137,56 @@ class InjectionPhrasesDetector implements Detector {
 
     return results;
   }
+
+  /**
+   * Detect ordered synonym sequences like: IGNORE ... PREVIOUS ... INSTRUCTIONS
+   * Allows up to maxGap words between terms and uses the SYNONYMS corpus.
+   */
+  private detectOrderedSynonymSequences(text: string, maxGap: number = 6): DetectionResult[] {
+    const results: DetectionResult[] = [];
+    const ignoreGroup = this.buildWordGroup(SYNONYMS.ignore);
+    const previousGroup = this.buildWordGroup(SYNONYMS.previous);
+    const instructionsGroup = this.buildWordGroup(SYNONYMS.instructions);
+
+    // Gap allowing up to N words between tokens
+    const gap = `(?:[^\w]+\w+){0,${maxGap}}[^\w]+`;
+    const pattern = new RegExp(
+      `\\b(?:${ignoreGroup})\\b${gap}\\b(?:${previousGroup})\\b${gap}\\b(?:${instructionsGroup})\\b`,
+      'gi'
+    );
+
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(text)) !== null) {
+      const start = match.index;
+      const end = start + match[0].length;
+      results.push({
+        type: 'prompt-injection',
+        severity: 'critical',
+        matched: match[0],
+        startIndex: start,
+        endIndex: end,
+        context: 'Ordered synonym sequence detected: ignore → previous → instructions',
+      });
+    }
+
+    return results;
+  }
+
+  /**
+   * Build a regex alternation group for words, allowing simple singular/plural variations.
+   */
+  private buildWordGroup(words: string[]): string {
+    const escaped = words.map((w) => {
+      const safe = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      // Allow optional trailing 's' if the synonym is plural; crude but effective for our list
+      if (/s$/.test(safe)) {
+        const base = safe.replace(/s$/, '');
+        return `(?:${base}s?)`;
+      }
+      return safe;
+    });
+    return escaped.join('|');
+  }
 }
 
 export const injectionPhrasesDetector = new InjectionPhrasesDetector();
-

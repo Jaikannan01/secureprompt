@@ -1,12 +1,12 @@
 <#
   SecurePrompt installer (Windows PowerShell)
   Usage:
-    iwr -useb https://raw.githubusercontent.com/<org>/secureprompt/main/scripts/install.ps1 | iex
+    iwr -useb https://raw.githubusercontent.com/Jaikannan01/secureprompt/main/scripts/install.ps1 | iex
     $env:METHOD='git'; iwr -useb https://your.domain/install.ps1 | iex
 #>
 
 param(
-  [string]$RepoUrl = $env:REPO_URL -or 'https://github.com/yourusername/secureprompt.git',
+  [string]$RepoUrl = $env:REPO_URL -or 'https://github.com/Jaikannan01/secureprompt.git',
   [string]$Branch = $env:BRANCH -or 'main',
   [string]$Dir = $env:DIR,
   [ValidateSet('git','zip')]
@@ -65,4 +65,3 @@ if (-not $SkipBuild) {
 Write-Info "Installation complete!"
 Write-Host "`nTo use the library in your project:" -ForegroundColor Cyan
 Write-Host "  npm install secureprompt"
-
