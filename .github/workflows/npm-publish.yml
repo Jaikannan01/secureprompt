@@ -4,8 +4,9 @@
 name: Publish secureprompt.dev
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -24,7 +25,19 @@ jobs:
       - run: npm --version
       - run: npm ci
       - run: npm run build
-      - run: npm publish -w secureprompt.dev --access public --provenance
+      - name: Check version change
+        id: version_check
+        run: |
+          PKG_VERSION=$(node -p "require('./packages/secureprompt/package.json').version")
+          PUBLISHED_VERSION=$(npm view secureprompt.dev version || echo "0.0.0")
+          if [ "$PKG_VERSION" = "$PUBLISHED_VERSION" ]; then
+            echo "publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "publish=true" >> $GITHUB_OUTPUT
+          fi
+      - name: Publish
+        if: steps.version_check.outputs.publish == 'true'
+        run: npm publish -w secureprompt.dev --access public --provenance
         env:
           NODE_AUTH_TOKEN: ""
           
