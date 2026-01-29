@@ -6,12 +6,6 @@ name: Publish secureprompt.dev
 on:
   release:
     types: [published]
-  workflow_dispatch:
-    inputs:
-      publish:
-        description: "Run a real npm publish (false uses --dry-run)"
-        required: false
-        default: "false"
 
 permissions:
   contents: read
@@ -29,9 +23,7 @@ jobs:
       - run: npm i -g npm@latest
       - run: npm ci
       - run: npm run build
-      - name: Unset npm auth token
-        run: echo "NODE_AUTH_TOKEN=" >> $GITHUB_ENV
       - name: Publish
-        if: github.event_name == 'release' || inputs.publish == 'true'
-        run: npm publish -w secureprompt.dev --access public --provenance
+        run: NODE_AUTH_TOKEN="" npm publish -w secureprompt.dev --access public --provenance
+       
           
