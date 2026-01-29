@@ -138,6 +138,11 @@ const result = sanitizePrompt('hello foo', {
 - **Base64 Encoded**: Base64 encoded injection attempts
 - **Unicode Obfuscation**: Suspicious Unicode character usage
 
+### Curse Words (Optional)
+
+SecurePrompt does not include built-in profanity detection. If you want to flag or redact curse words,
+use a custom detector (see **Custom Detectors** above).
+
 ## API Reference
 
 ### `sanitizePrompt(input: string, config?: SanitizerConfig): SanitizationResult`
